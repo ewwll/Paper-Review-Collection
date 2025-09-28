@@ -1,3 +1,6 @@
 # Power Flow Balancing With Decentralized Graph Neural Networks论文解读
-## 2. 为什么选择这篇论文
-因为
+## 1. 为什么选择这篇论文
+我首先将所有的论文大致速览了一遍，我觉得 AI 在特定领域应用的成功，绝不是纯粹的模型堆砌，而是对业务痛点和现有局限性的深刻理解。从而我觉得要入门电力人工智能领域需要结合业务来选择模型，那么首先需要做到大致了解电力业务以及电力业务目前的研究状况和局限性，因此我选择了这一篇论文作为第一篇精读的论文。通过其了解业务特性和业务中可能存在的将人工智能模型应用于此的场景。
+## 2. 背景介绍与相关背景知识
+通过阅读abstract可知，该论文大致上做了一件这样的事情：将电力中的“潮流分析”问题用图神经网络来解决。为此首先需要了解“潮流分析”是什么意思，通过阅读论文的”The Power Flow Problem“部分和在网上查找资料得知，“潮流分析”是在电力系统给定运行条件和系统接线方式下，对系统的电压分布、功率分布进行求解，本质上就是电路问题，求电压、功率等。
+而论文这一段”Adistinction must be made between power flow (PF)– also called AC power flow (ACPF)– and optimal power flow (OPF) problems; while the former is solving a system of equations,the latter minimizes a cost function subject to constraints that include the PF equations. This paper focuses on PF.“则说明，需对潮流（Power Flow，简称 PF，又称交流潮流 AC Power Flow，简称 ACPF）与最优潮流（Optimal Power Flow，简称 OPF）两类问题加以区分：前者旨在求解一组方程组，后者则是在包含潮流方程的约束条件下，实现成本函数的最小化。而这个论文的研究重点为潮流问题。这里面又有了一些问题，论文里面经常提到一个词叫母线（buses），母线是什么意思呢？维基百科查阅母线定义：”在电力系统中，母线是指在输配电系统中，配电盘、配电箱、变电站等使用的导电的铜线或铝线，用以连接同一电压的线路。“我理解为母线就是电力系统里的一个电气节点，把所有连在一起、可以认为电压相同的设备（发电机、负荷、变压器、线路）抽象成一个点。而论文中介绍每个母线理论上有四个主要电气变量：电压幅值∣𝑉∣电压相角 𝜃 有功功率 𝑃和无功功率 Q。 **👉 但注意：在实际运行中，这四个量里有些是“已知的控制量”，有些是“未知的结果”。所以工程师就把母线分成不同类型。** 而论文中说潮流分析的本质为”Typically, the aim of power flow balancing is to find the complex voltages on the buses that satisfy the balance equations“，意思应该是通常而言，潮流平衡的核心目标是求解母线的复电压，使其满足式（1）与式（2）中的平衡方程。
